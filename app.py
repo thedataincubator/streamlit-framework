@@ -15,6 +15,7 @@ if st.button("Start"):
     timeSeries = data["Time Series (Daily)"]
 
     results = []
+    dates = []
     day = 31
     date = ""
     while day > 0:
@@ -30,12 +31,11 @@ if st.button("Start"):
         dayPrices = timeSeries[date]
         closing = dayPrices["4. close"]
         results.append(closing)
+        dates.append(date)
 
         day = day - 1
 
     st.write(results)
+    st.write(dates)
 else:
     st.write("Not yet started")
-
-
-data["Time series(Daily)"]["2021-06-24"]["4. close"]
