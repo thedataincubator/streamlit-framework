@@ -2,6 +2,7 @@ import pandas as pd
 import requests
 import streamlit as st
 import altair as alt
+import os
 
 ticker = st.text_input("Ticker")
 month = st.text_input("Month (XX)")
@@ -10,7 +11,8 @@ year = st.text_input("Year (XXXX)")
 st.text(year + " " + month + " " + ticker)
 
 if st.button("Start"):
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ticker+'&outputsize=full&apikey=5WB3BZG4UX3GQGAH'
+    apiKey = os.environ["API_KEY"]
+    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ticker+'&outputsize=full&apikey='+apiKey
     r = requests.get(url)
     data = r.json()
 
