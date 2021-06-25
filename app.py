@@ -37,9 +37,6 @@ if st.button("Start"):
 
         day = day - 1
 
-    st.write(results)
-    st.write(dates)
-
     source = pd.DataFrame({'Dates': dates, 'Closing Price': results})
     c = alt.Chart(source).mark_line().encode(x='Dates', y='Closing Price')
     st.write(c)
