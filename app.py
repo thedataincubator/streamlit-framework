@@ -32,7 +32,7 @@ if st.button("Start"):
 
         dayPrices = timeSeries[date]
         closing = dayPrices["4. close"]
-        results.append(int(closing))
+        results.append(float(closing))
         dates.append(date)
 
         day = day - 1
