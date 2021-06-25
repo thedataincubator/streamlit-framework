@@ -21,3 +21,12 @@ progress_bar.empty()
 # this button is not connected to any other logic, it just causes a plain
 # rerun.
 st.button("Re-run")
+
+ticker = st.text_input("Ticker")
+month = st.text_input("Month")
+day = st.text_input("Day")
+year = st.text_input("Year")
+
+st.text(year + " " + day + " " + month + " " + ticker)
+
+
