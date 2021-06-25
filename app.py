@@ -1,9 +1,11 @@
+import pandas as pd
 import requests
 import streamlit as st
+import altair as alt
 
 ticker = st.text_input("Ticker")
-month = st.text_input("Month")
-year = st.text_input("Year")
+month = st.text_input("Month (XX)")
+year = st.text_input("Year (XXXX)")
 
 st.text(year + " " + month + " " + ticker)
 
@@ -37,5 +39,9 @@ if st.button("Start"):
 
     st.write(results)
     st.write(dates)
+
+    source = pd.DataFrame({'Dates': dates, 'Closing Price': results})
+    c = alt.Chart(source).mark_line().encode(x='Dates', y='Closing Price')
+    st.write(c)
 else:
     st.write("Not yet started")
