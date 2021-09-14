@@ -6,7 +6,6 @@ import pandas as pd
 st.title('Garrick Bruening TDI Milestone')
 import csv
 import requests
-import json
 import plotly.express as px
 import datetime
 from plotly.subplots import make_subplots
