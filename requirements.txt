@@ -5,3 +5,6 @@ python-dotenv
 altair
 bokeh
 requests
+simplejson
+json
+plotly
