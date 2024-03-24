@@ -77,3 +77,5 @@ def incoming_message_received(body: dict) -> None:
                     st.markdown(msg)
         st.session_state.messages.append({"role": "user", "content": msg})
         ai(data=f'New message recieved from Sujal: {msg}')
+
+main()
