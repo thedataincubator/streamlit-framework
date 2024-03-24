@@ -41,7 +41,7 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    st.success(message)
+    st.session_state['new_message'] = message
 
 import streamlit as st
 
@@ -52,6 +52,9 @@ if check1:
     st.session_state.messages = []
     chat = model.start_chat(history=[])
 # Initialize chat history
+if 'new_message' not in st.session_state:
+    st.session_state['new_message'] = None
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -61,6 +64,12 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # React to user input
+# Main thread Streamlit code
+if 'new_message' in st.session_state and st.session_state['new_message']:
+    st.success(st.session_state['new_message'])
+    # Clear the message after displaying it
+    st.session_state['new_message'] = None
+
 if prompt := st.chat_input("What is up?"):
     # Display user message in chat message container
     st.chat_message("user").markdown(prompt)
