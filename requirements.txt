@@ -5,3 +5,4 @@ python-dotenv
 altair
 bokeh
 requests
+google-generativeai
