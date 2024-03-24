@@ -6,6 +6,7 @@ from datetime import datetime
 from json import dumps
 from whatsapp_api_client_python import API
 import os
+import re
 GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
 genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -50,7 +51,10 @@ if prompt := st.chat_input("What is up?"):
     st.button('Delete')
     st.session_state.messages.append(k)
 
-import re
+
+greenAPI = API.GreenAPI(
+    "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
+)
 def main():
     ai_chat(data="Hi Gemini, I've integrated your API with the WhatsApp API, and you're now connected to a WhatsApp group. You have the capability to interact with the group members by sending and receiving messages. Feel free to engage in conversations and provide assistance as needed. Enjoy your new environment and happy chatting!. Make sure to be short like we do in chatting")
     greenAPI.webhooks.startReceivingNotifications(handler)
