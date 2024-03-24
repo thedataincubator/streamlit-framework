@@ -24,44 +24,43 @@ def ai(data):
     with st.chat_message("assistant"):
         st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response.text})
-def app():
-    import streamlit as st
-    
-    st.title("Gemini")
-    sideb = st.sidebar
-    check1 = sideb.button("Delete")
-    if check1:
-        st.session_state.messages = []
-        chat = model.start_chat(history=[])
-    # Initialize chat history
-    if 'new_message' not in st.session_state:
-        st.session_state['new_message'] = None
-    
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-    
-    # Display chat messages from history on app rerun
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-    
-    # React to user input
-    # Main thread Streamlit code
-    if 'new_message' in st.session_state and st.session_state['new_message']:
-        st.success(st.session_state['new_message'])
-        # Clear the message after displaying it
-        st.session_state['new_message'] = None
-    
-    if prompt := st.chat_input("What is up?"):
-        # Display user message in chat message container
-        st.chat_message("user").markdown(prompt)
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        k=ai_chat(data=prompt)
-        response=k['content']
-        with st.chat_message("assistant"):
-            st.markdown(response)
-        st.session_state.messages.append(k)
+import streamlit as st
+
+st.title("Gemini")
+sideb = st.sidebar
+check1 = sideb.button("Delete")
+if check1:
+    st.session_state.messages = []
+    chat = model.start_chat(history=[])
+# Initialize chat history
+if 'new_message' not in st.session_state:
+    st.session_state['new_message'] = None
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# React to user input
+# Main thread Streamlit code
+if 'new_message' in st.session_state and st.session_state['new_message']:
+    st.success(st.session_state['new_message'])
+    # Clear the message after displaying it
+    st.session_state['new_message'] = None
+
+if prompt := st.chat_input("What is up?"):
+    # Display user message in chat message container
+    st.chat_message("user").markdown(prompt)
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    k=ai_chat(data=prompt)
+    response=k['content']
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    st.session_state.messages.append(k)
 
 from datetime import datetime
 from json import dumps
@@ -82,7 +81,7 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    if check==False:
-        thread= threading.Thread(target=main, daemon=Tru)
-        thread.start()
-        check=True
+    st.success(message)
+
+if __name___==__main__:
+    main()
