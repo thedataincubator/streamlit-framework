@@ -66,8 +66,9 @@ def handler(type_webhook: str, body: dict) -> None:
     if type_webhook == "incomingMessageReceived":
         incoming_message_received(body)
 
-
 def incoming_message_received(body: dict) -> None:
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     msg=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
