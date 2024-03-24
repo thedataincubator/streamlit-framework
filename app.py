@@ -32,7 +32,6 @@ from whatsapp_api_client_python import API
 greenAPI = API.GreenAPI(
     "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
 )
-import asyncio
 
 def handler(type_webhook: str, body: dict) -> None:
     if type_webhook == "incomingMessageReceived":
@@ -73,16 +72,8 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(response)
     st.session_state.messages.append(k)
 
-async def main():
+def main():
     greenAPI.webhooks.startReceivingNotifications(handler)
-
-# Define a function to run the asyncio event loop in a separate thread
-def run_asyncio_loop():
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(main())
-
-# Start the asyncio event loop in a background thread when the app starts
-if 'asyncio_thread' not in st.session_state:
-    st.session_state['asyncio_thread'] = threading.Thread(target=run_asyncio_loop, daemon=True)
-    st.session_state['asyncio_thread'].start()
+if 'thread' not in st.session_state:
+    st.session_state['thread'] = threading.Thread(target=run_asyncio_loop, daemon=True)
+    st.session_state['sthread'].start()
