@@ -18,13 +18,13 @@ sideb = st.sidebar
 check1 = sideb.button("Delete")
 if check1:
     st.session_state.messages = []
+    chat = model.start_chat(history=[])
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
-    st.success(str(message))
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
@@ -38,5 +38,6 @@ if prompt := st.chat_input("What is up?"):
     response=k['content']
     with st.chat_message("assistant"):
         st.markdown(response)
+        st.button(delete)
     # Add assistant response to chat history
     st.session_state.messages.append(k)
