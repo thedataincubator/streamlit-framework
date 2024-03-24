@@ -37,13 +37,7 @@ def handler(type_webhook: str, body: dict) -> None:
         incoming_message_received(body)
 
 
-def get_notification_time(timestamp: int) -> str:
-    return str(datetime.fromtimestamp(timestamp))
-
-
 def incoming_message_received(body: dict) -> None:
-    timestamp = body["timestamp"]
-    time = get_notification_time(timestamp)
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
@@ -53,8 +47,8 @@ def incoming_message_received(body: dict) -> None:
         st.session_state.messages.append({"role": "user", "content": message})
         ai(data=f'New message recieved from Sujal: {message}')
 
-if __name__ == '__main__':
-    main()
+listener_thread = threading.Thread(target=main, daemon=True)
+listener_thread.start()
 
 import streamlit as st
 
