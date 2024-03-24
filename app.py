@@ -38,6 +38,6 @@ if prompt := st.chat_input("What is up?"):
     response=k['content']
     with st.chat_message("assistant"):
         st.markdown(response)
-        st.button(delete)
+        st.button('delete')
     # Add assistant response to chat history
     st.session_state.messages.append(k)
