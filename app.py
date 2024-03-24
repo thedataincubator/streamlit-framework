@@ -53,34 +53,3 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         st.markdown(response)
     st.session_state.messages.append(k)
-
-greenAPI = API.GreenAPI(
-    "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
-)
-def main():
-    ai_chat(data="Hi Gemini, I've integrated your API with the WhatsApp API, and you're now connected to a WhatsApp group. You have the capability to interact with the group members by sending and receiving messages. Feel free to engage in conversations and provide assistance as needed. Enjoy your new environment and happy chatting!. Make sure to be short like we do in chatting")
-    greenAPI.webhooks.startReceivingNotifications(handler)
-
-
-def handler(type_webhook: str, body: dict) -> None:
-    if type_webhook == "incomingMessageReceived":
-        incoming_message_received(body)
-
-def incoming_message_received(body: dict) -> None:
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-    data = dumps(body, ensure_ascii=False, indent=4)
-    x = re.search(r'"textMessage":.*"', data)
-    msg=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    if msg:
-        with st.chat_message("user"):
-                    st.markdown(msg)
-        st.session_state.messages.append({"role": "user", "content": msg})
-        ai(data=f'New message recieved from Sujal: {msg}')
-
-def run_main():
-    main_thread = threading.Thread(target=main)
-    main_thread.start()
-
-if __name__ == '__main__':
-    run_main()
