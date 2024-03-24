@@ -24,7 +24,7 @@ def ai(data):
     with st.chat_message("assistant"):
         st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response.text})
-def app()
+def app():
     import streamlit as st
     
     st.title("Gemini")
