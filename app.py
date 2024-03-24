@@ -76,4 +76,5 @@ def main():
     greenAPI.webhooks.startReceivingNotifications(handler)
 if 'thread' not in st.session_state:
     st.session_state['thread'] = threading.Thread(target=main, daemon=True)
+if 'sthread' not in st.session_state:
     st.session_state['sthread'].start()
