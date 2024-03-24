@@ -7,6 +7,7 @@ from json import dumps
 from whatsapp_api_client_python import API
 import os
 import re
+import threading
 GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
 genai.configure(api_key=GOOGLE_API_KEY)
 
