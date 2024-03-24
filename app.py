@@ -22,35 +22,7 @@ def ai(data):
     response = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     with st.chat_message("assistant"):
         st.markdown(response)
-    st.session_state.messages.append({"role": "assistant", "content": response})
-st.title("Gemini")
-sideb = st.sidebar
-check1 = sideb.button("Delete")
-if check1:
-    st.session_state.messages = []
-    chat = model.start_chat(history=[])
-# Initialize chat history
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Display chat messages from history on app rerun
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# React to user input
-if prompt := st.chat_input("What is up?"):
-    # Display user message in chat message container
-    st.chat_message("user").markdown(prompt)
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    k=ai_chat(data=prompt)
-    response=k['content']
-    with st.chat_message("assistant"):
-        st.markdown(response)
-    st.button('Delete')
-    st.session_state.messages.append(k)
-
+    st.session_state.messages.append({"role": "assistant", "content": response.text})
 
 greenAPI = API.GreenAPI(
     "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
@@ -83,3 +55,32 @@ def incoming_message_received(body: dict) -> None:
 
 if __name__ == '__main__':
     main()
+
+import streamlit as st
+
+st.title("Gemini")
+sideb = st.sidebar
+check1 = sideb.button("Delete")
+if check1:
+    st.session_state.messages = []
+    chat = model.start_chat(history=[])
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# React to user input
+if prompt := st.chat_input("What is up?"):
+    # Display user message in chat message container
+    st.chat_message("user").markdown(prompt)
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    k=ai_chat(data=prompt)
+    response=k['content']
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    st.session_state.messages.append(k)
