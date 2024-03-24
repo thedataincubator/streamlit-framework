@@ -78,4 +78,9 @@ def incoming_message_received(body: dict) -> None:
         st.session_state.messages.append({"role": "user", "content": msg})
         ai(data=f'New message recieved from Sujal: {msg}')
 
-main()
+def run_main():
+    main_thread = threading.Thread(target=main)
+    main_thread.start()
+
+if __name__ == '__main__':
+    run_main()
