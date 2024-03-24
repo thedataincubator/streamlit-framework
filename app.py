@@ -1,8 +1,12 @@
 import streamlit as st
 import pathlib
 import textwrap
-import os
 import google.generativeai as genai
+from IPython.display import display, Markdown
+from google.colab import userdata
+from datetime import datetime
+from json import dumps
+from whatsapp_api_client_python import API
 GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
 genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -13,6 +17,12 @@ chat = model.start_chat(history=[])
 def ai_chat(data):
     response = chat.send_message(data)
     return {'role': 'assistant', 'content':response.text}
+def ai(data):
+    response = chat.send_message(data)
+    response = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    st.session_state.messages.append({"role": "assistant", "content": response})
 st.title("Gemini")
 sideb = st.sidebar
 check1 = sideb.button("Delete")
@@ -40,3 +50,33 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(response)
     st.button('Delete')
     st.session_state.messages.append(k)
+
+import re
+def main():
+    ai_chat(data="Hi Gemini, I've integrated your API with the WhatsApp API, and you're now connected to a WhatsApp group. You have the capability to interact with the group members by sending and receiving messages. Feel free to engage in conversations and provide assistance as needed. Enjoy your new environment and happy chatting!. Make sure to be short like we do in chatting")
+    greenAPI.webhooks.startReceivingNotifications(handler)
+
+
+def handler(type_webhook: str, body: dict) -> None:
+    if type_webhook == "incomingMessageReceived":
+        incoming_message_received(body)
+
+
+def get_notification_time(timestamp: int) -> str:
+    return str(datetime.fromtimestamp(timestamp))
+
+
+def incoming_message_received(body: dict) -> None:
+    timestamp = body["timestamp"]
+    time = get_notification_time(timestamp)
+    data = dumps(body, ensure_ascii=False, indent=4)
+    x = re.search(r'"textMessage":.*"', data)
+    message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
+    if message:
+        with st.chat_message("user"):
+                    st.markdown(message)
+        st.session_state.messages.append({"role": "user", "content": message})
+        ai(data=f'New message recieved from Sujal: {message}')
+
+if __name__ == '__main__':
+    main()
