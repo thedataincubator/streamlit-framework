@@ -36,8 +36,8 @@ if check1:
     st.session_state.messages = []
     chat = model.start_chat(history=[])
 # Initialize chat history
-if 'new_message' not in st.session_state:
-    st.session_state['new_message'] = None
+if 'msg' not in st.session_state:
+    st.session_state['msg'] = None
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -49,10 +49,10 @@ for message in st.session_state.messages:
 
 # React to user input
 # Main thread Streamlit code
-if 'new_message' in st.session_state and st.session_state['new_message']:
-    st.success(st.session_state['new_message'])
+if 'msg' in st.session_state and st.session_state['msg']:
+    st.success(st.session_state['msg'])
     # Clear the message after displaying it
-    st.session_state['new_message'] = None
+    st.session_state['msg'] = None
 
 if prompt := st.chat_input("What is up?"):
     # Display user message in chat message container
@@ -84,7 +84,7 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    st.session_state['message'] = message
+    st.session_state['msg'] = message
 ctx = get_script_run_ctx()
 from threading import Thread
 
