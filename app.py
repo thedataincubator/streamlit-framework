@@ -2,8 +2,6 @@ import streamlit as st
 import pathlib
 import textwrap
 import google.generativeai as genai
-from IPython.display import display, Markdown
-from google.colab import userdata
 from datetime import datetime
 from json import dumps
 from whatsapp_api_client_python import API
