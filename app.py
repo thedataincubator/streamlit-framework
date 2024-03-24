@@ -1,6 +1,19 @@
 import streamlit as st
+import pathlib
+import textwrap
+import os
+import google.generativeai as genai
+GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
+genai.configure(api_key=GOOGLE_API_KEY)
 
-st.title("Echo Bot")
+# Create an instance of the generative AI model and start a chat session
+model = genai.GenerativeModel('gemini-pro')
+chat = model.start_chat(history=[])
+
+def ai_chat(data):
+    response = chat.send_message(data)
+    return {'role': 'assistant', 'content':response.text}
+st.title("Gemini")
 sideb = st.sidebar
 check1 = sideb.button("Delete")
 if check1:
@@ -21,10 +34,9 @@ if prompt := st.chat_input("What is up?"):
     st.chat_message("user").markdown(prompt)
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-
-    response = f"Echo: {prompt}"
-    # Display assistant response in chat message container
+    k=ai_chat(data=prompt)
+    response=k['content']
     with st.chat_message("assistant"):
         st.markdown(response)
     # Add assistant response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.session_state.messages.append(k)
