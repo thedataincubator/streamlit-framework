@@ -8,6 +8,9 @@ from whatsapp_api_client_python import API
 import os
 import re
 import threading
+from streamlit.runtime.scriptrunner import add_script_run_ctx
+from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
+
 GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
 genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -81,7 +84,11 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    st.success(message)
+    st.session_state['message'] = message
+ctx = get_script_run_ctx()
+from threading import Thread
 
-if __name___==__main__:
-    main()
+thread = Thread(target=main)
+add_script_run_ctx(thread, ctx)  # Attach the script run context to the thread
+thread.start()
+
