@@ -48,9 +48,6 @@ def incoming_message_received(body: dict) -> None:
         st.session_state.messages.append({"role": "user", "content": message})
         ai(data=f'New message recieved from Sujal: {message}')
 
-listener_thread = threading.Thread(target=main, daemon=True)
-listener_thread.start()
-
 import streamlit as st
 
 st.title("Gemini")
