@@ -6,3 +6,4 @@ altair
 bokeh
 requests
 google-generativeai
+whatsapp-api-client-python
