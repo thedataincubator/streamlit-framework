@@ -1,7 +1,10 @@
 import streamlit as st
 
 st.title("Echo Bot")
-
+sideb = st.sidebar
+check1 = sideb.button("Delete")
+if check1:
+    st.session_state.messages = []
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
