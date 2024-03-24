@@ -33,8 +33,6 @@ greenAPI = API.GreenAPI(
     "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
 )
 import asyncio
-async def main():
-    greenAPI.webhooks.startReceivingNotifications(handler)
 
 def handler(type_webhook: str, body: dict) -> None:
     if type_webhook == "incomingMessageReceived":
@@ -45,8 +43,6 @@ def incoming_message_received(body: dict) -> None:
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
     st.success(message)
-
-asyncio.run(main())
 
 import streamlit as st
 
@@ -76,3 +72,17 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         st.markdown(response)
     st.session_state.messages.append(k)
+
+async def main():
+    greenAPI.webhooks.startReceivingNotifications(handler)
+
+# Define a function to run the asyncio event loop in a separate thread
+def run_asyncio_loop():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(main())
+
+# Start the asyncio event loop in a background thread when the app starts
+if 'asyncio_thread' not in st.session_state:
+    st.session_state['asyncio_thread'] = threading.Thread(target=run_asyncio_loop, daemon=True)
+    st.session_state['asyncio_thread'].start()
