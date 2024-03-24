@@ -63,19 +63,6 @@ if check1:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-def incoming_message_received(body: dict) -> None:
-    data = dumps(body, ensure_ascii=False, indent=4)
-    x = re.search(r'"textMessage":.*"', data)
-    message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    if message:
-        with st.chat_message("user"):
-                    st.markdown(message)
-        st.session_state.messages.append({"role": "user", "content": message})
-        ai(data=f'New message recieved from Sujal: {message}')
-
-listener_thread = threading.Thread(target=main, daemon=True)
-listener_thread.start()
-
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -92,3 +79,5 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         st.markdown(response)
     st.session_state.messages.append(k)
+listener_thread = threading.Thread(target=main, daemon=True)
+listener_thread.start()
