@@ -75,5 +75,5 @@ if prompt := st.chat_input("What is up?"):
 def main():
     greenAPI.webhooks.startReceivingNotifications(handler)
 if 'thread' not in st.session_state:
-    st.session_start['thread']=threading.Thread(main, daemon=True)
+    st.session_state['thread'] = threading.Thread(target=main, daemon=True)
     st.session_start['thread'].start()
