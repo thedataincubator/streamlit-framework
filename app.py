@@ -70,11 +70,11 @@ def handler(type_webhook: str, body: dict) -> None:
 def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
-    message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    if message:
+    msg=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
+    if msg:
         with st.chat_message("user"):
-                    st.markdown(message)
-        st.session_state.messages.append({"role": "user", "content": message})
-        ai(data=f'New message recieved from Sujal: {message}')
+                    st.markdown(msg)
+        st.session_state.messages.append({"role": "user", "content": msg})
+        ai(data=f'New message recieved from Sujal: {msg}')
 listener_thread = threading.Thread(target=main, daemon=True)
 listener_thread.start()
