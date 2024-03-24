@@ -27,7 +27,26 @@ def ai(data):
 
 from datetime import datetime
 from json import dumps
+from whatsapp_api_client_python import API
 
+greenAPI = API.GreenAPI(
+    "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
+)
+import asyncio
+async def main():
+    greenAPI.webhooks.startReceivingNotifications(handler)
+
+def handler(type_webhook: str, body: dict) -> None:
+    if type_webhook == "incomingMessageReceived":
+        incoming_message_received(body)
+
+def incoming_message_received(body: dict) -> None:
+    data = dumps(body, ensure_ascii=False, indent=4)
+    x = re.search(r'"textMessage":.*"', data)
+    message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
+    st.success(message)
+
+asyncio.run(main())
 
 import streamlit as st
 
@@ -57,22 +76,3 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         st.markdown(response)
     st.session_state.messages.append(k)
-from whatsapp_api_client_python import API
-
-greenAPI = API.GreenAPI(
-    "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
-)
-import asyncio
-async def main():
-    greenAPI.webhooks.startReceivingNotifications(handler)
-
-def handler(type_webhook: str, body: dict) -> None:
-    if type_webhook == "incomingMessageReceived":
-        incoming_message_received(body)
-
-def incoming_message_received(body: dict) -> None:
-    data = dumps(body, ensure_ascii=False, indent=4)
-    x = re.search(r'"textMessage":.*"', data)
-    message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    st.success(message)
-asyncio.run(main())
