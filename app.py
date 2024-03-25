@@ -33,7 +33,8 @@ record = session.query(Data).first()
 if record:
     dicmd = record.dicmd
     messages=record.message
-
+st.success(dicmd)
+st.success(messages)
 st.title("Gemini")
 sideb = st.sidebar
 options = ["User", "AI"]
