@@ -34,6 +34,8 @@ record = session.query(Data).first()
 if record:
     # Import the dicmd dictionary
     dicmd = record.dicmd
+    record.message.extend([{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}])
+    session.commit()
     messages=record.message
     if dicmd is None:
         dicmd_dict = {}
@@ -50,8 +52,6 @@ check1 = sideb.button("Delete")
 if check1:
     d[f'Reset-{uuid4.uuid4()}']='Reset'
 
-messages = [{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
-# Display chat messages from history on app rerun
 for message in messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
