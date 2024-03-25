@@ -23,10 +23,10 @@ def ai_chat(data):
     return {'role': 'assistant', 'content':response.text}
 def ai(data):
     response = st.session_state['chat'].send_message(data)
-    response = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
+    st.session_state.messages.append({"role": "assistant", "content":response.text})
+    r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     with st.chat_message("assistant"):
         st.markdown(response)
-    st.session_state.messages.append({"role": "assistant", "content":response.text})
 
 import streamlit as st
 st.title("Gemini")
