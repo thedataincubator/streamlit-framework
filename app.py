@@ -47,19 +47,9 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-def check_for_new_messages():
-    if 'msg' in st.session_state and st.session_state['msg']:
-        k=st.session_state['msg']
+if 'msg' in st.session_state and st.session_state['msg']:
+        st.success(st.session_state['msg'])
         st.session_state['msg']=None
-        return k
-    return None
-# Or use a timer for automatic refresh (less recommended due to constant polling)
-while True:
-    message = check_for_new_messages()
-    if message:
-        st.success(message)
-    time.sleep(0.5)  # Check every 10 seconds, adjust as needed
-
 
 if prompt := st.chat_input("What is up?"):
     # Display user message in chat message container
@@ -92,6 +82,8 @@ def incoming_message_received(body: dict) -> None:
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
     st.session_state['msg']=message
+    st.rerun()
+
 ctx = get_script_run_ctx()
 from threading import Thread
 
