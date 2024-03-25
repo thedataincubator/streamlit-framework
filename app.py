@@ -3,7 +3,7 @@ import streamlit as st
 import streamlit as st
 import uuid as uuid4
 import random
-c=83742
+d={}
 
 st.title("Gemini")
 sideb = st.sidebar
@@ -11,10 +11,9 @@ options = ["User", "AI"]
 selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
 if check1:
-    st.session_state.messages = []
+    d[f'Reset-{uuid4.uuid4()}']='Reset'
 
 messages = [{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
-d={}
 # Display chat messages from history on app rerun
 for message in messages:
     with st.chat_message(message["role"]):
