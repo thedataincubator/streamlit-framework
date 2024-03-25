@@ -31,6 +31,8 @@ def ai(data):
     r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     with st.chat_message("assistant"):
         st.markdown(response.text)
+    if st.button('Delete'):
+        st.success(r.data)
 
 import streamlit as st
 st.title("Gemini")
@@ -65,12 +67,19 @@ if prompt := st.chat_input("What is up?"):
         with st.chat_message("assistant"):
             st.markdown(prompt)
 
+if 'inital' not in st.sesssion_state:
+        st.sesssion_state['inital']=ai_chat(data="Hi Gemini, this is Sujal. I've successfully integrated your API with the WhatsApp API, which means you're now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we're all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let's have some great conversations!")
+        response=k['content']
+        with st.chat_message("assistant"):
+            st.markdown(response)
+        st.session_state.messages.append(k)
+
 from datetime import datetime
 from json import dumps
 
 async def main():
     greenAPI.webhooks.startReceivingNotifications(handler)
-    ai_chat(data='Hi Gemini, this is Sujal. I have successfully integrated your API with the WhatsApp API, which means you are now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we aree all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let s have some great conversations!')
+
 def handler(type_webhook: str, body: dict) -> None:
     if type_webhook == "incomingMessageReceived":
         incoming_message_received(body)
