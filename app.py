@@ -39,7 +39,19 @@ if record:
     record.message=messages
     session.commit()
     print(record.message)
+    session.close()
 print(dicmd, messages)
+session2 = SessionLocal()
+class Data(Base):
+    __tablename__ = 'data'  # Name of the table in the database
+    id = Column(Integer, primary_key=True)  # Primary key column
+    message = Column(PickleType)  # Column to store a pickled list
+    dicmd = Column(PickleType)  # Column to store a pickled dictionary
+# Create an instance of the Data class
+record2 = session.query(Data).first()
+if record2:
+    messages=record2.message
+    print(record2.message)
 d={}
 
 st.title("Gemini")
