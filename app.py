@@ -4,7 +4,7 @@ import json
 import os
 
 # Path to the JSON file
-json_file_path = '/temp/variables.json'
+json_file_path = '/tmp/variables.json'
 
 # Function to load data from JSON file
 def load_data():
