@@ -3,7 +3,11 @@ import streamlit as st
 import streamlit as st
 import uuid as uuid4
 import random
-from sqlalchemy import Column, Integer, String, PickleType
+import psycopg2
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, PickleType
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+import os
 
 # Database setup
 DATABASE_URL = os.environ.get('DATABASE_URL')  # Replace with your actual database URL
