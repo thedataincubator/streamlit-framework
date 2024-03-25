@@ -7,10 +7,8 @@ from json import dumps
 from whatsapp_api_client_python import API
 import os
 import re
-import threading
+import asyncio
 import time
-from streamlit.runtime.scriptrunner import add_script_run_ctx
-from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
 
 GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
 genai.configure(api_key=GOOGLE_API_KEY)
@@ -36,20 +34,14 @@ check1 = sideb.button("Delete")
 if check1:
     st.session_state.messages = []
     chat = model.start_chat(history=[])
-# Initialize chat history
-if 'msg' not in st.session_state:
-    st.session_state['msg'] = None
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-
-if 'msg' in st.session_state and st.session_state['msg']:
-        st.success(st.session_state['msg'])
-        st.session_state['msg']=None
 
 if prompt := st.chat_input("What is up?"):
     # Display user message in chat message container
@@ -70,7 +62,7 @@ greenAPI = API.GreenAPI(
     "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
 )
 
-def main():
+async def main():
     greenAPI.webhooks.startReceivingNotifications(handler)
 
 def handler(type_webhook: str, body: dict) -> None:
@@ -81,13 +73,6 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    st.session_state['msg']=message
-    st.rerun()
+    st.success(message)
 
-ctx = get_script_run_ctx()
-from threading import Thread
-
-thread = Thread(target=main)
-add_script_run_ctx(thread, ctx)  # Attach the script run context to the thread
-thread.start()
-
+asyncio.run(main())
