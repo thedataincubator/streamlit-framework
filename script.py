@@ -1,4 +1,5 @@
 from whatsapp_api_client_python import API
+from json import dumps
 import re
 greenAPI = API.GreenAPI(
     "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
