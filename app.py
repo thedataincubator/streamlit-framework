@@ -24,7 +24,11 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 session = SessionLocal()
-
+class Data(Base):
+    __tablename__ = 'data'  # Name of the table in the database
+    id = Column(Integer, primary_key=True)  # Primary key column
+    message = Column(PickleType)  # Column to store a pickled list
+    dicmd = Column(PickleType)  # Column to store a pickled dictionary
 # Create an instance of the Data class
 new_data = Data(message=["Your message here"], dicmd={"your": "dictionary"})
 
