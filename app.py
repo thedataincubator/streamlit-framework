@@ -36,6 +36,9 @@ if record:
     messages=record.message
     k=[{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
     messages.extend(k)
+    record.message=messages
+    session.commit()
+    print(record.message)
 print(dicmd, messages)
 d={}
 
