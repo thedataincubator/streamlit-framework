@@ -43,7 +43,7 @@ def messagek():
 if 'start' not in st.session_state:
     st.session_state['start']=messagek()
 
-print(dicmd, (st.ession_state['start']))
+print((st.ession_state['start']))
 d={}
 
 st.title("Gemini")
