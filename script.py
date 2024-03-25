@@ -3,6 +3,7 @@ from json import dumps
 import re
 import json
 import os
+import google.generativeai as genai
 json_file_path = '/tmp/variables.json'
 
 # Function to load data from JSON file
