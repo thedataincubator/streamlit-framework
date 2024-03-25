@@ -1,64 +1,52 @@
 import streamlit as st
-
-import streamlit as st
-import uuid as uuid4
-import random
-import psycopg2
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, PickleType
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
+import uuid
+import json
 import os
 
-# Database setup
-DATABASE_URL = os.environ.get('DATABASE_URL')  # Replace with your actual database URL
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+# Path to the JSON file
+json_file_path = '/temp/variables.json'
 
-# Create a database engine
-engine = create_engine(DATABASE_URL)
+# Function to load data from JSON file
+def load_data():
+    if os.path.exists(json_file_path):
+        with open(json_file_path, 'r') as file:
+            return json.load(file)
+    else:
+        return {"messages": [], "dicmd": {}}
 
-# Create a configured "Session" class
-SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+# Function to save data to JSON file
+def save_data(data):
+    with open(json_file_path, 'w') as file:
+        json.dump(data, file)
 
-# Initialize the base class for declarative class definitions
-Base = declarative_base()
-class Data(Base):
-    __tablename__ = 'data'  # Name of the table in the database
-    id = Column(Integer, primary_key=True)  # Primary key column
-    message = Column(PickleType)  # Column to store a pickled list
-    dicmd = Column(PickleType)
-
-session = SessionLocal()
-record = session.query(Data).first()
-if record:
-    dicmd = record.dicmd
-    messages=record.message
-st.success(dicmd)
-st.success(messages)
+# Load existing data
+data = load_data()
+messages = data.get("messages", [])
+dicmd = data.get("dicmd", {})
 
 st.title("Gemini")
 sideb = st.sidebar
 options = ["User", "AI"]
 selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
+st.success(dicmd)
 if check1:
-    dicmd[f'Reset-{uuid4.uuid4()}']='Reset'
-    record.dicmd=dicmd
-    session.commit()
-    print(record.dicmd)
+    dicmd[f'Reset-{uuid.uuid4()}'] = 'Reset'
+    save_data(data)  # Save changes to JSON file
+    st.rerun()  # Rerun the app to reflect changes
+
 for message in messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-    if message["role"]=="assistant":
-        if message["id"]!=None:
+    if message["role"] == "assistant":
+        if message["id"] != None:
             if st.button(f'Del-{message["id"]}'):
-                dicmd[f'delete{message["id"]}']=message["id"]
-                print(dicmd)
+                dicmd[f'delete{message["id"]}'] = message["id"]
+                save_data(data)  # Save changes to JSON file
 
 if prompt := st.chat_input("What is up?"):
-    if selected_option=="User":
-        dicmd[f'userprompt-{uuid4.uuid4()}']=prompt
-        print(dicmd)
-    if selected_option=="AI":
-        dicmd[f'aiprompt-{uuid4.uuid4()}']=prompt
-        print(dicmd)
+    if selected_option == "User":
+        dicmd[f'userprompt-{uuid.uuid4()}'] = prompt
+    elif selected_option == "AI":
+        dicmd[f'aiprompt-{uuid.uuid4()}'] = prompt
+    save_data(data)  # Save changes to JSON file
