@@ -40,9 +40,10 @@ if record:
     record.message=record.message
     print(record.message)
     session.commit()
+    print(record.message)
     messages=record.message
     print(messages)
-print(dicmd, messages)
+print(dicmd, record.message)
 d={}
 
 st.title("Gemini")
