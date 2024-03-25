@@ -41,10 +41,7 @@ if record:
     print(record.message)
     session.commit()
     messages=record.message
-    if dicmd is None:
-        dicmd_dict = {}
-    if messages is None:
-        messages=[]
+    print(messages)
 print(dicmd, messages)
 d={}
 
