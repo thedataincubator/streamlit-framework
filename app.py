@@ -8,6 +8,7 @@ from whatsapp_api_client_python import API
 import os
 import re
 import threading
+import time
 from streamlit.runtime.scriptrunner import add_script_run_ctx
 from streamlit.runtime.scriptrunner.script_run_context import get_script_run_ctx
 
@@ -41,19 +42,24 @@ if 'msg' not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-def displayx(data):
-    st.success(data)
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# React to user input
-# Main thread Streamlit code
-if 'msg' in st.session_state and st.session_state['msg']:
-    st.success(st.session_state['msg'])
-    # Clear the message after displaying it
-    st.session_state['msg'] = None
+def check_for_new_messages():
+    if 'msg' in st.session_state and st.session_state['msg']:
+        k=st.session_state['msg']
+        st.session_state['msg']=None
+        return k
+    return None
+# Or use a timer for automatic refresh (less recommended due to constant polling)
+while True:
+    message = check_for_new_messages()
+    if message:
+        st.success(message)
+    time.sleep(0.5)  # Check every 10 seconds, adjust as needed
+
 
 if prompt := st.chat_input("What is up?"):
     # Display user message in chat message container
@@ -85,7 +91,7 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    displayx(data=message)
+    st.session_state['msg']=message
 ctx = get_script_run_ctx()
 from threading import Thread
 
