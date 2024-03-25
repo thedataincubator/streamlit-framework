@@ -31,7 +31,7 @@ def ai(data):
     r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     with st.chat_message("assistant"):
         st.markdown(response.text)
-    if st.button('Delete'):
+    if st.button(f'Del-{r.data}'):
         st.success(r.data)
 
 import streamlit as st
