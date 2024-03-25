@@ -33,7 +33,7 @@ class Data(Base):
 record = session.query(Data).first()
 if record:
     # Import the dicmd dictionary
-    dicmd = record.dicmdr
+    dicmd = record.dicmd
     record.message=[]
     session.commit()
     record.message.extend([{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}])
