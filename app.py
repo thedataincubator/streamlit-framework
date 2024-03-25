@@ -40,6 +40,7 @@ if record:
     record.message=record.message
     print(record.message)
     session.commit()
+    session.refresh(record)
     print(record.message)
     messages=record.message
     print(messages)
