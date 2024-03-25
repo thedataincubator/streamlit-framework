@@ -32,7 +32,7 @@ import streamlit as st
 st.title("Gemini")
 sideb = st.sidebar
 options = ["User", "AI"]
-selected_option = st.radio("Message As:", options)
+selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
 if check1:
     st.session_state.messages = []
