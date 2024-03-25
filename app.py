@@ -5,6 +5,20 @@ import uuid as uuid4
 import random
 from sqlalchemy import Column, Integer, String, PickleType
 
+# Database setup
+DATABASE_URL = os.environ.get('DATABASE_URL')  # Replace with your actual database URL
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+
+# Create a database engine
+engine = create_engine(DATABASE_URL)
+
+# Create a configured "Session" class
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Initialize the base class for declarative class definitions
+Base = declarative_base()
+
 class Data(Base):
     __tablename__ = 'data'
     id = Column(Integer, primary_key=True)
