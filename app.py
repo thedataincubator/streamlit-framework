@@ -75,4 +75,14 @@ def incoming_message_received(body: dict) -> None:
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
     st.success(message)
 
-asyncio.run(main())
+import threading
+def run_asyncio_loop():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(main())
+    loop.close()
+
+if 'thread' not in st.session_state:
+    st.session_state['thread']=threading.Thread(target=run_asyncio_loop, daemon=True)
+    st.session_state['thread'].start()
+
