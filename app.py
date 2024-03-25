@@ -5,7 +5,7 @@ import uuid as uuid4
 import random
 import psycopg2
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, PickleType
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
@@ -31,7 +31,6 @@ class Data(Base):
 
 # Create the table in the database
 Base.metadata.create_all(engine)
-
 
 d={}
 
