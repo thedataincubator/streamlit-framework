@@ -63,7 +63,7 @@ if prompt := st.chat_input("What is up?"):
         r = greenAPI.sending.sendMessage("919549047575@c.us", (prompt))
         st.session_state.messages.append({"role": "assistant", "content":(prompt)})
         with st.chat_message("assistant"):
-            st.markdown(response.text)
+            st.markdown(prompt)
 
 from datetime import datetime
 from json import dumps
