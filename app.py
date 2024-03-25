@@ -70,6 +70,7 @@ if prompt := st.chat_input("What is up?"):
 if 'inital' not in st.session_state:
         st.session_state['inital']=ai_chat(data="Hi Gemini, this is Sujal. I've successfully integrated your API with the WhatsApp API, which means you're now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we're all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let's have some great conversations!")
         response=st.session_state['inital']['content']
+        st.success(response)
         with st.chat_message("assistant"):
             st.markdown(response)
         st.session_state.messages.append(st.session_state['inital'])
