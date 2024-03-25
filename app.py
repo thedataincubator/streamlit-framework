@@ -3,6 +3,18 @@ import streamlit as st
 import streamlit as st
 import uuid as uuid4
 import random
+from sqlalchemy import Column, Integer, String, PickleType
+
+class Data(Base):
+    __tablename__ = 'data'
+    id = Column(Integer, primary_key=True)
+    message = Column(PickleType, default=[])
+    dicmd = Column(PickleType, default={})
+
+# Create the table in the database
+Base.metadata.create_all(engine)
+
+
 d={}
 
 st.title("Gemini")
