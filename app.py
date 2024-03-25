@@ -41,7 +41,8 @@ if 'msg' not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
+def displayx(data):
+    st.success(data)
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -84,7 +85,7 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    st.session_state['msg'] = message
+    displayx(data=message)
 ctx = get_script_run_ctx()
 from threading import Thread
 
