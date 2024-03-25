@@ -20,7 +20,7 @@ def save_data(data):
         json.dump(data, file)
 
 # Load existing data
-data = load_data()
+disk = load_data()
 messages = data.get("messages", [])
 dicmd = data.get("dicmd", {})
 
@@ -42,7 +42,7 @@ def ai(data):
     response =chat.send_message(data)
     r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     messages.append({"role": "assistant", "content":(response.text)})
-    save_data(data)
+    save_data(disk)
 
 def main():
   greenAPI.webhooks.startReceivingNotifications(handler)
@@ -57,6 +57,7 @@ def incoming_message_received(body: dict) -> None:
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
     messages.append({"role": "user", "content":message})
+    save_data(disk)
     ai(data=message)
     print(message)
 
