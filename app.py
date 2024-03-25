@@ -15,13 +15,14 @@ genai.configure(api_key=GOOGLE_API_KEY)
 
 # Create an instance of the generative AI model and start a chat session
 model = genai.GenerativeModel('gemini-pro')
-chat = model.start_chat(history=[])
+if 'chat' not in st.session_state:
+    st.session_state['chat'] = model.start_chat(history=[])
 
 def ai_chat(data):
-    response = chat.send_message(data)
+    response = st.session_state['chat'].send_message(data)
     return {'role': 'assistant', 'content':response.text}
 def ai(data):
-    response = chat.send_message(data)
+    response = st.session_state['chat'].send_message(data)
     response = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     with st.chat_message("assistant"):
         st.markdown(response)
