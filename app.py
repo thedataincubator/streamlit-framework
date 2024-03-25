@@ -47,13 +47,19 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 if prompt := st.chat_input("What is up?"):
-    st.chat_message("user").markdown(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    k=ai_chat(data=prompt)
-    response=k['content']
-    with st.chat_message("assistant"):
-        st.markdown(response)
-    st.session_state.messages.append(k)
+    if selected_option=="User":
+        st.chat_message("user").markdown(prompt)
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        k=ai_chat(data=prompt)
+        response=k['content']
+        with st.chat_message("assistant"):
+            st.markdown(response)
+        st.session_state.messages.append(k)
+    if selected_option=="AI":
+        r = greenAPI.sending.sendMessage("919549047575@c.us", (prompt))
+        st.session_state.messages.append({"role": "assistant", "content":(prompt)})
+        with st.chat_message("assistant"):
+            st.markdown(response.text)
 
 from datetime import datetime
 from json import dumps
@@ -74,6 +80,9 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
+    with st.chat_message("user"):
+        st.markdown(message)
+    st.session_state.messages.append(k)
     ai(data=message)
 
 asyncio.run(main())
