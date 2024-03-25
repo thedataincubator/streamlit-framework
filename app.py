@@ -18,29 +18,32 @@ if DATABASE_URL.startswith("postgres://"):
 engine = create_engine(DATABASE_URL)
 
 # Create a configured "Session" class
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
 
 # Initialize the base class for declarative class definitions
 Base = declarative_base()
-
-session = SessionLocal()
 class Data(Base):
     __tablename__ = 'data'  # Name of the table in the database
     id = Column(Integer, primary_key=True)  # Primary key column
     message = Column(PickleType)  # Column to store a pickled list
-    dicmd = Column(PickleType)  # Column to store a pickled dictionary
-# Create an instance of the Data class
-record = session.query(Data).first()
-if record:
-    dicmd = record.dicmd
-    messages=record.message
-    k=[{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
-    messages.extend(k)
-    record.message=messages
-    session.flush()
-    print(record.message)
-    session.commit()
-print(dicmd, messages)
+    dicmd = Column(PickleType)
+def messagek():
+    session = SessionLocal()
+    record = session.query(Data).first()
+    if record:
+        dicmd = record.dicmd
+        messages=record.message
+        k=[{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
+        messages.extend(k)
+        record.message=messages
+        print(record.message)
+        session.commit()
+        return record.message
+
+if 'start' not in st.session_state:
+    st.session_state['start']=messagek()
+
+print(dicmd, (st.ession_state['start']))
 d={}
 
 st.title("Gemini")
