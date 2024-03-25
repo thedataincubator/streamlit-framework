@@ -7,3 +7,5 @@ bokeh
 requests
 google-generativeai
 whatsapp-api-client-python
+psycopg2
+sqlalchemy
