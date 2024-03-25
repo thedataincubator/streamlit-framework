@@ -82,7 +82,7 @@ def incoming_message_received(body: dict) -> None:
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
     with st.chat_message("user"):
         st.markdown(message)
-    st.session_state.messages.append(k)
+    st.session_state.messages.append({"role": "assistant", "content":(message)})
     ai(data=message)
 
 asyncio.run(main())
