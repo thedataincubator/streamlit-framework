@@ -35,7 +35,7 @@ if record:
     # Import the dicmd dictionary
     dicmd = record.dicmd
     messages=record.message
-    if dicmd_dict is None:
+    if dicmd is None:
         dicmd_dict = {}
     if messages is None:
         messages=[]
