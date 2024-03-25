@@ -25,11 +25,13 @@ def ai(data):
     response = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     with st.chat_message("assistant"):
         st.markdown(response)
-    st.session_state.messages.append({"role": "assistant", "content": response.text})
-import streamlit as st
+    st.session_state.messages.append({"role": "assistant", "content":response.text})
 
+import streamlit as st
 st.title("Gemini")
 sideb = st.sidebar
+options = ["User", "AI"]
+selected_option = st.radio("Message As:", options)
 check1 = sideb.button("Delete")
 if check1:
     st.session_state.messages = []
@@ -44,9 +46,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 if prompt := st.chat_input("What is up?"):
-    # Display user message in chat message container
     st.chat_message("user").markdown(prompt)
-    # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
     k=ai_chat(data=prompt)
     response=k['content']
@@ -73,16 +73,6 @@ def incoming_message_received(body: dict) -> None:
     data = dumps(body, ensure_ascii=False, indent=4)
     x = re.search(r'"textMessage":.*"', data)
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    st.success(message)
+    ai(data=message)
 
-import threading
-def run_asyncio_loop():
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(main())
-    loop.close()
-
-if 'thread' not in st.session_state:
-    st.session_state['thread']=threading.Thread(target=run_asyncio_loop, daemon=False)
-    st.session_state['thread'].start()
-
+asyncio.run(main())
