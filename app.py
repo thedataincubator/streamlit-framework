@@ -33,12 +33,6 @@ record = session.query(Data).first()
 if record:
     dicmd = record.dicmd
     messages=record.message
-print(dicmd)
-record.dicmd={}
-print(record.dicmd)
-session.commit()
-dicmd=record.dicmd
-print(dicmd)
 
 st.title("Gemini")
 sideb = st.sidebar
@@ -47,6 +41,7 @@ selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
 if check1:
     dicmd[f'Reset-{uuid4.uuid4()}']='Reset'
+    session.commit()
 
 for message in messages:
     with st.chat_message(message["role"]):
