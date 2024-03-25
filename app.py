@@ -9,7 +9,11 @@ import os
 import re
 import asyncio
 import time
+from whatsapp_api_client_python import API
 
+greenAPI = API.GreenAPI(
+    "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
+)
 GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
 genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -63,11 +67,6 @@ if prompt := st.chat_input("What is up?"):
 
 from datetime import datetime
 from json import dumps
-from whatsapp_api_client_python import API
-
-greenAPI = API.GreenAPI(
-    "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
-)
 
 async def main():
     greenAPI.webhooks.startReceivingNotifications(handler)
