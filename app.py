@@ -83,6 +83,6 @@ def run_asyncio_loop():
     loop.close()
 
 if 'thread' not in st.session_state:
-    st.session_state['thread']=threading.Thread(target=run_asyncio_loop, daemon=True)
+    st.session_state['thread']=threading.Thread(target=run_asyncio_loop, daemon=False)
     st.session_state['thread'].start()
 
