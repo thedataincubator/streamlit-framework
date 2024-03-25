@@ -37,15 +37,10 @@ if record:
     k=[{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
     messages.extend(k)
     record.message=messages
-    session.commit()
+    session.flush()
     print(record.message)
-    session.close()
+    session.commit()
 print(dicmd, messages)
-session2 = SessionLocal()
-record2 = session.query(Data).first()
-if record2:
-    messages=record2.message
-    print(record2.message)
 d={}
 
 st.title("Gemini")
