@@ -23,14 +23,14 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Initialize the base class for declarative class definitions
 Base = declarative_base()
 
-class Data(Base):
-    __tablename__ = 'data'
-    id = Column(Integer, primary_key=True)
-    message = Column(PickleType, default=[])
-    dicmd = Column(PickleType, default={})
+session = SessionLocal()
 
-# Create the table in the database
-Base.metadata.create_all(engine)
+# Create an instance of the Data class
+new_data = Data(message=["Your message here"], dicmd={"your": "dictionary"})
+
+# Add the new instance to the session and commit it to the database
+session.add(new_data)
+session.commit()
 
 d={}
 
