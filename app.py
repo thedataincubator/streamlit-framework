@@ -35,6 +35,7 @@ if record:
     messages=record.message
 st.success(dicmd)
 st.success(messages)
+
 st.title("Gemini")
 sideb = st.sidebar
 options = ["User", "AI"]
@@ -42,8 +43,9 @@ selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
 if check1:
     dicmd[f'Reset-{uuid4.uuid4()}']='Reset'
+    record.dicmd=dicmd
     session.commit()
-
+    print(record.dicmd)
 for message in messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
