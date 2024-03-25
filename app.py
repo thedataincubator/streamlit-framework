@@ -30,12 +30,16 @@ class Data(Base):
     message = Column(PickleType)  # Column to store a pickled list
     dicmd = Column(PickleType)  # Column to store a pickled dictionary
 # Create an instance of the Data class
-new_data = Data(message=["Your message here"], dicmd={"your": "dictionary"})
-
-# Add the new instance to the session and commit it to the database
-session.add(new_data)
-session.commit()
-
+record = session.query(Data).first()
+if record:
+    # Import the dicmd dictionary
+    dicmd = record.dicmd
+    messages=record.message
+    if dicmd_dict is None:
+        dicmd_dict = {}
+    if messages is None:
+        messages=[]
+print(dicmd, messages)
 d={}
 
 st.title("Gemini")
