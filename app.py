@@ -33,17 +33,8 @@ class Data(Base):
 record = session.query(Data).first()
 if record:
     dicmd = record.dicmd
-    record.message=[]
-    session.commit()
-    k=[{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
-    record.message.extend(k)
-    record.message=record.message
-    print(record.message)
-    session.commit()
-    session.refresh(record)
-    print(record.message)
     messages=record.message
-    print(messages)
+
 print(dicmd, record.message)
 d={}
 
