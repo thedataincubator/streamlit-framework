@@ -29,7 +29,7 @@ sideb = st.sidebar
 options = ["User", "AI"]
 selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
-st.success(dicmd)
+st.success(messages)
 if check1:
     dicmd[f'Reset-{uuid.uuid4()}'] = 'Reset'
     save_data(data)  # Save changes to JSON file
