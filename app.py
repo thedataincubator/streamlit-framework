@@ -27,24 +27,18 @@ class Data(Base):
     id = Column(Integer, primary_key=True)  # Primary key column
     message = Column(PickleType)  # Column to store a pickled list
     dicmd = Column(PickleType)
-def messagek():
-    session = SessionLocal()
-    record = session.query(Data).first()
-    if record:
-        dicmd = record.dicmd
-        messages=record.message
-        k=[{"role": "user", "content": 'Hi', "id":None}, {"role": "assistant", "content": 'Hii,sujal', "id":'BAE5CC52E94351C2'}, {"role": "user", "content": 'halo', "id":None}, {"role": "assistant", "content": 'Hisujal', "id":None}]
-        messages.extend(k)
-        record.message=messages
-        print(record.message)
-        session.commit()
-        return record.message
 
-if 'start' not in st.session_state:
-    st.session_state['start']=messagek()
-
-print((st.session_state['start']))
-d={}
+session = SessionLocal()
+record = session.query(Data).first()
+if record:
+    dicmd = record.dicmd
+    messages=record.message
+print(dicmd)
+record.dicmd={}
+print(record.dicmd)
+session.commit()
+dicmd=record.dicmd
+print(dicmd)
 
 st.title("Gemini")
 sideb = st.sidebar
@@ -52,7 +46,7 @@ options = ["User", "AI"]
 selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
 if check1:
-    d[f'Reset-{uuid4.uuid4()}']='Reset'
+    dicmd[f'Reset-{uuid4.uuid4()}']='Reset'
 
 for message in messages:
     with st.chat_message(message["role"]):
@@ -60,13 +54,13 @@ for message in messages:
     if message["role"]=="assistant":
         if message["id"]!=None:
             if st.button(f'Del-{message["id"]}'):
-                d[f'delete{message["id"]}']=message["id"]
-                print(d)
+                dicmd[f'delete{message["id"]}']=message["id"]
+                print(dicmd)
 
 if prompt := st.chat_input("What is up?"):
     if selected_option=="User":
-        d[f'userprompt-{uuid4.uuid4()}']=prompt
-        print(d)
+        dicmd[f'userprompt-{uuid4.uuid4()}']=prompt
+        print(dicmd)
     if selected_option=="AI":
-        d[f'aiprompt-{uuid4.uuid4()}']=prompt
-        print(d)
+        dicmd[f'aiprompt-{uuid4.uuid4()}']=prompt
+        print(dicmd)
