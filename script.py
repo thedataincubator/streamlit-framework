@@ -95,6 +95,7 @@ def checkforthing():
 
 def periodic_task():
     while True:
+        print('checking')
         checkforthing()
         time.sleep(5)
 
