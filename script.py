@@ -55,6 +55,9 @@ model = genai.GenerativeModel('gemini-pro')
 chat= model.start_chat(history=[])
 
 def ai_chat(data):
+    messages.append({"role": "user", "content":data})
+    disk["messages"] = messages
+    save_data(data=disk)
     response =chat.send_message(data)
     messages.append({"role": "assistant", "content":(response.text), "id":None})
     disk["messages"] = messages
@@ -85,13 +88,13 @@ def checkforthing():
         for k in dicmd.keys():
             if k[0:6]=='delete':
                 delid(id=dicmd[k])
+                del dicmd[k]
             if k[0:10]=='userprompt':
                 ai_chat(data=dicmd[k])
+                del dicmd[k]
             if k[0:8]=='aiprompt':
                 sendo(message=dicmd[k])
-        disk["dicmd"]={}
-        save_data(data=disk)
-    
+                del dicmd[k]
 
 def periodic_task():
     while True:
