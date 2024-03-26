@@ -62,7 +62,7 @@ def ai_chat(data):
 def ai(data):
     response =chat.send_message(data)
     r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
-    messages.append({"role": "assistant", "content":(response.text)})
+    messages.append({"role": "assistant", "content":(response.text), "id":(r.response.data)})
     disk["messages"] = messages
     save_data(data=disk)
 
