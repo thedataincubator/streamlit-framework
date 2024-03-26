@@ -88,7 +88,7 @@ def checkforthing():
     disk = load_data()
     dicmd = disk.get("dicmd")
     if dicmd!={}:
-        for k in dicmd.keys():
+        for k in list(dicmd.keys()):
             if k[0:6]=='delete':
                 delid(id=dicmd[k])
                 del dicmd[k]
