@@ -8,8 +8,8 @@ import os
 from botocore.exceptions import ClientError
 
 # Fetch AWS credentials from environment variables
-aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
-aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+aws_access_key_id = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
 
 # Initialize a boto3 client with the credentials from environment variables
 s3 = boto3.client(
@@ -18,7 +18,7 @@ s3 = boto3.client(
     aws_secret_access_key=aws_secret_access_key
 )
 
-bucket_name = os.environ.get('S3_BUCKET_NAME')
+bucket_name = os.environ.get('BUCKETEER_BUCKET_NAME')
 s3_file_key = 'variables.json'
 
 def load_data():
