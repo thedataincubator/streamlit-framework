@@ -4,11 +4,8 @@ import re
 import json
 import os
 import google.generativeai as genai
-import json
-import os
 import boto3
-import json
-import os
+import threading
 from botocore.exceptions import ClientError
 
 # Fetch AWS credentials from environment variables
@@ -58,7 +55,10 @@ chat= model.start_chat(history=[])
 
 def ai_chat(data):
     response =chat.send_message(data)
-    return {'role': 'assistant', 'content':response.text}
+    messages.append({"role": "assistant", "content":(response.text), "id":None})
+    disk["messages"] = messages
+    save_data(data=disk)
+
 def ai(data):
     response =chat.send_message(data)
     r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
@@ -66,9 +66,40 @@ def ai(data):
     disk["messages"] = messages
     save_data(data=disk)
 
-def main():
-  greenAPI.webhooks.startReceivingNotifications(handler)
+def sendo(message):
+    r = greenAPI.sending.sendMessage("919549047575@c.us", message)
+    messages.append({"role": "assistant", "content":message, "id":r.data['idMessage']})
+    disk["messages"] = messages
+    save_data(data=disk)
 
+def delid(id):
+    try:
+        response = greenAPI.serviceMethods.deleteMessage(chatId="919549047575@c.us", idMessage=id)
+        response.data = json.loads(response.text)
+    except Exception as e:
+        print("deleted successfully")
+
+def checkforthing():
+    if dicmd!={}:
+        for k in d.keys():
+            if k[0:6]=='delete':
+                delid(id=dicmd[k])
+            if k[0:10]=='userprompt':
+                ai_chat(data=dicmd[k])
+            if k[0:8]=='aiprompt':
+                sendo(message=dicmd[k])
+        disk["dicmd"]={}
+        save_data(data=disk)
+    
+
+def periodic_task():
+    while True:
+        checkforthing()
+        time.sleep(5)
+
+def main():
+    threading.Thread(target=periodic_task, daemon=True).start()
+    greenAPI.webhooks.startReceivingNotifications(handler)
 
 def handler(type_webhook: str, body: dict) -> None:
     if type_webhook == "incomingMessageReceived":
