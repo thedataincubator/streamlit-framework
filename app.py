@@ -1,0 +1,69 @@
+import streamlit as st
+import uuid
+import json
+import os
+import boto3
+import json
+import os
+from botocore.exceptions import ClientError
+
+# Fetch AWS credentials from environment variables
+aws_access_key_id = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
+bucket_name = os.environ.get('BUCKETEER_BUCKET_NAME')
+s3_file_key = 'variables.json'
+
+session = boto3.Session(
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+)
+
+# Create an S3 client using the session
+s3 = session.client('s3')
+
+def load_data():
+    response = s3.get_object(Bucket=bucket_name, Key=s3_file_key)
+    data = response['Body'].read()
+    return json.loads(data)
+
+def save_data(data):
+    s3.put_object(Bucket=bucket_name, Key=s3_file_key, Body=json.dumps(data))
+
+# Example usage
+disk = load_data()
+messages = disk.get("messages")
+dicmd = disk.get("dicmd")
+
+
+st.title("Gemini")
+sideb = st.sidebar
+options = ["User", "AI"]
+selected_option = sideb.radio("Message As:", options)
+check1 = sideb.button("Delete")
+st.success(dicmd)
+
+if check1:
+    dicmd[f'Reset-{uuid.uuid4()}'] = 'Reset'
+    disk['dicmd']=dicmd
+    save_data(data=disk)  # Save changes to JSON file
+    st.rerun()  # Rerun the app to reflect changes
+
+for message in messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+    if message["role"] == "assistant":
+        if message["id"] != None:
+            if st.button(f'Del-{message["id"]}'):
+                dicmd[f'delete{message["id"]}'] = message["id"]
+                disk['dicmd']=dicmd
+                save_data(data=disk)  # Save changes to JSON file
+
+if prompt := st.chat_input("What is up?"):
+    if selected_option == "User":
+        dicmd[f'userprompt-{uuid.uuid4()}'] = prompt
+        disk['dicmd']=dicmd
+        save_data(data=disk)
+    if selected_option == "AI":
+        dicmd[f'aiprompt-{uuid.uuid4()}'] = prompt
+        disk['dicmd']=dicmd
+        save_data(data=disk)  # Save changes to JSON file
