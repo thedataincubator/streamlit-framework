@@ -64,8 +64,8 @@ def ai_chat(data):
         messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
         disk["messages"] = messages
         save_data(data=disk)
-    except:
-        k=str(response.prompt_feedback)
+    except Exception as e:
+        k=str(e)
         if k.startswith('block_reason'):
             pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
             match = re.search(pattern, k)
@@ -76,11 +76,6 @@ def ai_chat(data):
                 messages.append({"role": "assistant", "content":(response.text), "id":None})
                 disk["messages"] = messages
                 save_data(data=disk)
-            else:
-                r = greenAPI.sending.sendMessage("120363274925681458@g.us", 'inappropriate prompt')
-                messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
-                disk["messages"] = messages
-                save_data(data=disk)
 
 def ai(data):
     try:
@@ -89,8 +84,8 @@ def ai(data):
         messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
         disk["messages"] = messages
         save_data(data=disk)
-    except:
-        k=str(response.prompt_feedback)
+    except Exception as e:
+        k=str(e)
         if k.startswith('block_reason'):
             pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
             match = re.search(pattern, k)
@@ -102,11 +97,7 @@ def ai(data):
                 messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
                 disk["messages"] = messages
                 save_data(data=disk)
-            else:
-                r = greenAPI.sending.sendMessage("120363274925681458@g.us", 'inappropriate prompt')
-                messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
-                disk["messages"] = messages
-                save_data(data=disk)
+
 def sendo(message):
     r = greenAPI.sending.sendMessage("120363274925681458@g.us", message)
     print('send successfully')
