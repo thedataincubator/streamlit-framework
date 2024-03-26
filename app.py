@@ -22,16 +22,9 @@ session = boto3.Session(
 s3 = session.client('s3')
 
 def load_data():
-    try:
-        response = s3.get_object(Bucket=bucket_name, Key=s3_file_key)
-        data = response['Body'].read()
-        return json.loads(data)
-    except ClientError as e:
-        if e.response['Error']['Code'] == 'NoSuchKey':
-            return {"messages": [], "dicmd": {}}
-        else:
-            # Other errors: raise them
-            raise
+    response = s3.get_object(Bucket=bucket_name, Key=s3_file_key)
+    data = response['Body'].read()
+    return json.loads(data)
 
 def save_data(data):
     s3.put_object(Bucket=bucket_name, Key=s3_file_key, Body=json.dumps(data))
