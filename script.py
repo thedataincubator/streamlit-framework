@@ -60,7 +60,12 @@ def ai_chat(data):
     save_data(data=disk)
     try:
         response =chat.send_message(data)
+        r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
+        messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
+        disk["messages"] = messages
+        save_data(data=disk)
     except:
+        response =chat.send_message(data)
         k=str(response.prompt_feedback)
         if k.startswith('block_reason'):
             pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
@@ -69,14 +74,24 @@ def ai_chat(data):
                 category = match.group("category")
                 probability = match.group("probability")
                 response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
-    messages.append({"role": "assistant", "content":(response.text), "id":None})
-    disk["messages"] = messages
-    save_data(data=disk)
+                messages.append({"role": "assistant", "content":(response.text), "id":None})
+                disk["messages"] = messages
+                save_data(data=disk)
+            else:
+                r = greenAPI.sending.sendMessage("120363274925681458@g.us", 'inappropriate prompt')
+                messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
+                disk["messages"] = messages
+                save_data(data=disk)
 
 def ai(data):
     try:
         response =chat.send_message(data)
+        r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
+        messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
+        disk["messages"] = messages
+        save_data(data=disk)
     except:
+        response =chat.send_message(data)
         k=str(response.prompt_feedback)
         if k.startswith('block_reason'):
             pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
@@ -85,11 +100,15 @@ def ai(data):
                 category = match.group("category")
                 probability = match.group("probability")
                 response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
-    r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
-    messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
-    disk["messages"] = messages
-    save_data(data=disk)
-
+                r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
+                messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
+                disk["messages"] = messages
+                save_data(data=disk)
+            else:
+                r = greenAPI.sending.sendMessage("120363274925681458@g.us", 'inappropriate prompt')
+                messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
+                disk["messages"] = messages
+                save_data(data=disk)
 def sendo(message):
     r = greenAPI.sending.sendMessage("120363274925681458@g.us", message)
     print('send successfully')
