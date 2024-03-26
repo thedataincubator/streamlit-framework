@@ -80,7 +80,7 @@ def ai(data):
         if match:
             category = match.group("category")
             probability = match.group("probability")
-            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}')
+            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
     r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
     messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
     disk["messages"] = messages
