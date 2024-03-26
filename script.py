@@ -82,7 +82,7 @@ def delid(id):
 
 def checkforthing():
     if dicmd!={}:
-        for k in d.keys():
+        for k in dicmd.keys():
             if k[0:6]=='delete':
                 delid(id=dicmd[k])
             if k[0:10]=='userprompt':
