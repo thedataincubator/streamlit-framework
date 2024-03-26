@@ -144,6 +144,18 @@ def handler(type_webhook: str, body: dict) -> None:
 
 def incoming_message_received(body: dict) -> None:
     if body['senderData']['chatId']=='120363274925681458@g.us':
+      if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage']=='Gemini, Who is Aditya?':
+          r = greenAPI.sending.sendMessage("120363274925681458@g.us", "🦁 doubt?")
+          print('send successfully')
+          messages.append({"role": "assistant", "content":message, "id":r.data['idMessage']})
+          disk["messages"] = messages
+          save_data(data=disk)
+      if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage']=='Gemini, Nishkarsh is a type of guy who..':
+          r = greenAPI.sending.sendMessage("120363274925681458@g.us", "who can teach the fish 🐟 how to swim..")
+          print('send successfully')
+          messages.append({"role": "assistant", "content":message, "id":r.data['idMessage']})
+          disk["messages"] = messages
+          save_data(data=disk)
       if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage'].startswith('Gemini,'):
         message=f"Recieved new message from {body['senderData']['senderContactName']}:={body['messageData']['textMessageData']['textMessage']}"
         messages.append({"role": "user", "content":message})
