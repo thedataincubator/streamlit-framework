@@ -76,10 +76,10 @@ def ai_chat(data):
                 disk["messages"] = messages
                 save_data(data=disk)
 
-def ai(data):
+def ai(data, ki):
     try:
         response =chat.send_message(data)
-        r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
+        r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text), ki)
         messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
         disk["messages"] = messages
         save_data(data=disk)
@@ -92,7 +92,7 @@ def ai(data):
                 category = match.group("category")
                 probability = match.group("probability")
                 j=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
-                r = greenAPI.sending.sendMessage("120363274925681458@g.us", j)
+                r = greenAPI.sending.sendMessage("120363274925681458@g.us", j, ki)
                 messages.append({"role": "assistant", "content":j, "id":r.data['idMessage']})
                 disk["messages"] = messages
                 save_data(data=disk)
@@ -135,7 +135,7 @@ def periodic_task():
 
 def main():
     threading.Thread(target=periodic_task, daemon=True).start()
-    ai(data="Hi Gemini, this is Sujal. I've successfully integrated your API with the WhatsApp API, which means you're now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we're all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let's have some great conversations!. Now on you will receive notification if someone message you")
+    ai_chat(data="Hi Gemini, this is Sujal. I've successfully integrated your API with the WhatsApp API, which means you're now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we're all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let's have some great conversations!. Now on you will receive notification if someone message you")
     greenAPI.webhooks.startReceivingNotifications(handler)
 
 def handler(type_webhook: str, body: dict) -> None:
@@ -149,7 +149,8 @@ def incoming_message_received(body: dict) -> None:
         messages.append({"role": "user", "content":message})
         disk["messages"] = messages
         save_data(data=disk)
-        ai(data=message)
+        ki=body['idMessage']
+        ai(data=message, ki=ki)
         print(message)
       if body['messageData']['typeMessage']=='quotedMessage' and body['messageData']['quotedMessage']['typeMessage']=='textMessage':
         if body['messageData']['extendedTextMessageData']['text'] and body['messageData']['extendedTextMessageData']['text'].startswith('Gemini,'):
@@ -157,7 +158,8 @@ def incoming_message_received(body: dict) -> None:
             messages.append({"role": "user", "content":message})
             disk["messages"] = messages
             save_data(data=disk)
-            ai(data=message)
+            ki=body['idMessage']
+            ai(data=message, ki=ki)
             print(message)
 
 if __name__ == '__main__':
