@@ -40,15 +40,18 @@ def save_data(data):
 disk = load_data()
 messages = disk.get("messages")
 dicmd = disk.get("dicmd")
-print(disk, messages)
+
+
 st.title("Gemini")
 sideb = st.sidebar
 options = ["User", "AI"]
 selected_option = sideb.radio("Message As:", options)
 check1 = sideb.button("Delete")
-st.success(messages)
+st.success(dicmd)
+
 if check1:
     dicmd[f'Reset-{uuid.uuid4()}'] = 'Reset'
+    disk['dicmd']=dicmd
     save_data(data=disk)  # Save changes to JSON file
     st.rerun()  # Rerun the app to reflect changes
 
@@ -59,6 +62,7 @@ for message in messages:
         if message["id"] != None:
             if st.button(f'Del-{message["id"]}'):
                 dicmd[f'delete{message["id"]}'] = message["id"]
+                disk['dicmd']=dicmd
                 save_data(data=disk)  # Save changes to JSON file
 
 if prompt := st.chat_input("What is up?"):
@@ -66,4 +70,5 @@ if prompt := st.chat_input("What is up?"):
         dicmd[f'userprompt-{uuid.uuid4()}'] = prompt
     elif selected_option == "AI":
         dicmd[f'aiprompt-{uuid.uuid4()}'] = prompt
+    disk['dicmd']=dicmd
     save_data(data=disk)  # Save changes to JSON file
