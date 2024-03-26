@@ -92,6 +92,8 @@ def checkforthing():
             if k[0:6]=='delete':
                 delid(id=dicmd[k])
                 del dicmd[k]
+                disk['dicmd']=dicmd
+                save_data(data=disk)
             if k[0:10]=='userprompt':
                 ai_chat(data=dicmd[k])
                 del dicmd[k]
