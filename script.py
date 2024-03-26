@@ -6,6 +6,7 @@ import os
 import google.generativeai as genai
 import boto3
 import threading
+import time
 from botocore.exceptions import ClientError
 
 # Fetch AWS credentials from environment variables
