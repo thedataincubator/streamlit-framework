@@ -60,7 +60,6 @@ def ai_chat(data):
     save_data(data=disk)
     try:
         response =chat.send_message(data)
-        r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
         messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
         disk["messages"] = messages
         save_data(data=disk)
@@ -93,7 +92,7 @@ def ai(data):
                 category = match.group("category")
                 probability = match.group("probability")
                 j=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
-                r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
+                r = greenAPI.sending.sendMessage("120363274925681458@g.us", j)
                 messages.append({"role": "assistant", "content":j, "id":r.data['idMessage']})
                 disk["messages"] = messages
                 save_data(data=disk)
