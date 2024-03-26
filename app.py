@@ -37,6 +37,7 @@ def load_data():
 
 def save_data(data):
     """Save data to an S3 bucket."""
+    print(data)
     s3.put_object(Bucket=bucket_name, Key=s3_file_key, Body=json.dumps(data))
 
 # Example usage
@@ -53,7 +54,7 @@ check1 = sideb.button("Delete")
 st.success(messages)
 if check1:
     dicmd[f'Reset-{uuid.uuid4()}'] = 'Reset'
-    save_data(disk)  # Save changes to JSON file
+    save_data(data=disk)  # Save changes to JSON file
     st.rerun()  # Rerun the app to reflect changes
 
 for message in messages:
@@ -63,11 +64,11 @@ for message in messages:
         if message["id"] != None:
             if st.button(f'Del-{message["id"]}'):
                 dicmd[f'delete{message["id"]}'] = message["id"]
-                save_data(disk)  # Save changes to JSON file
+                save_data(data=disk)  # Save changes to JSON file
 
 if prompt := st.chat_input("What is up?"):
     if selected_option == "User":
         dicmd[f'userprompt-{uuid.uuid4()}'] = prompt
     elif selected_option == "AI":
         dicmd[f'aiprompt-{uuid.uuid4()}'] = prompt
-    save_data(disk)  # Save changes to JSON file
+    save_data(data=disk)  # Save changes to JSON file
