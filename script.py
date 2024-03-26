@@ -59,19 +59,35 @@ def ai_chat(data):
     disk["messages"] = messages
     save_data(data=disk)
     response =chat.send_message(data)
+    k=str(response.prompt_feedback)
+    if k.startswith('block_reason'):
+        pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
+        match = re.search(pattern, k)
+        if match:
+            category = match.group("category")
+            probability = match.group("probability")
+            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}')
     messages.append({"role": "assistant", "content":(response.text), "id":None})
     disk["messages"] = messages
     save_data(data=disk)
 
 def ai(data):
     response =chat.send_message(data)
-    r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
+    k=str(response.prompt_feedback)
+    if k.startswith('block_reason'):
+        pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
+        match = re.search(pattern, k)
+        if match:
+            category = match.group("category")
+            probability = match.group("probability")
+            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}')
+    r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
     messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
     disk["messages"] = messages
     save_data(data=disk)
 
 def sendo(message):
-    r = greenAPI.sending.sendMessage("919549047575@c.us", message)
+    r = greenAPI.sending.sendMessage("120363274925681458@g.us", message)
     print('send successfully')
     messages.append({"role": "assistant", "content":message, "id":r.data['idMessage']})
     disk["messages"] = messages
@@ -79,7 +95,7 @@ def sendo(message):
 
 def delid(id):
     try:
-        response = greenAPI.serviceMethods.deleteMessage(chatId="919549047575@c.us", idMessage=id)
+        response = greenAPI.serviceMethods.deleteMessage(chatId="120363274925681458@g.us", idMessage=id)
         response.data = json.loads(response.text)
     except Exception as e:
         print("deleted successfully")
@@ -108,6 +124,7 @@ def periodic_task():
 
 def main():
     threading.Thread(target=periodic_task, daemon=True).start()
+    ai(data="Hi Gemini, this is Sujal. I've successfully integrated your API with the WhatsApp API, which means you're now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we're all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let's have some great conversations!. Now on you will receive notification if someone message you"
     greenAPI.webhooks.startReceivingNotifications(handler)
 
 def handler(type_webhook: str, body: dict) -> None:
@@ -115,14 +132,22 @@ def handler(type_webhook: str, body: dict) -> None:
         incoming_message_received(body)
 
 def incoming_message_received(body: dict) -> None:
-    data = dumps(body, ensure_ascii=False, indent=4)
-    x = re.search(r'"textMessage":.*"', data)
-    message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
-    messages.append({"role": "user", "content":message})
-    disk["messages"] = messages
-    save_data(data=disk)
-    ai(data=message)
-    print(message)
+    if body['senderData']['chatId']=='120363274925681458@g.us':
+      if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage'].startswith('Gemini,'):
+        message=f"Recieved new message from {body['senderData']['senderContactName']}:={body['messageData']['textMessageData']['textMessage']}")
+        messages.append({"role": "user", "content":message})
+        disk["messages"] = messages
+        save_data(data=disk)
+        ai(data=message)
+        print(message)
+      if body['messageData']['typeMessage']=='quotedMessage' and body['messageData']['quotedMessage']['typeMessage']=='textMessage':
+        if body['messageData']['extendedTextMessageData']['text'] and body['messageData']['extendedTextMessageData']['text'].startswith('Gemini,'):
+            message=f"Recieved new message from {body['senderData']['senderContactName']} with a quoted message(replying a message). message:={body['messageData']['extendedTextMessageData']['text']} _-_ reply:={body['messageData']['quotedMessage']['textMessage']}")
+            messages.append({"role": "user", "content":message})
+            disk["messages"] = messages
+            save_data(data=disk)
+            ai(data=message)
+            print(message)
 
 if __name__ == '__main__':
     main()
