@@ -10,42 +10,37 @@ from botocore.exceptions import ClientError
 # Fetch AWS credentials from environment variables
 aws_access_key_id = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
-
-# Initialize a boto3 client with the credentials from environment variables
-s3 = boto3.client(
-    's3',
-    aws_access_key_id=aws_access_key_id,
-    aws_secret_access_key=aws_secret_access_key
-)
-
 bucket_name = os.environ.get('BUCKETEER_BUCKET_NAME')
 s3_file_key = 'variables.json'
 
+session = boto3.Session(
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+)
+
+# Create an S3 client using the session
+s3 = session.client('s3')
+
 def load_data():
-    """Load data from an S3 bucket."""
     try:
         response = s3.get_object(Bucket=bucket_name, Key=s3_file_key)
         data = response['Body'].read()
         return json.loads(data)
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchKey':
-            st.error('file not found')
             return {"messages": [], "dicmd": {}}
         else:
             # Other errors: raise them
             raise
 
 def save_data(data):
-    """Save data to an S3 bucket."""
-    print(data)
     s3.put_object(Bucket=bucket_name, Key=s3_file_key, Body=json.dumps(data))
 
 # Example usage
 disk = load_data()
-print(disk)
-messages = disk.get("messages", [])
-dicmd = disk.get("dicmd", {})
-
+messages = disk.get("messages")
+dicmd = disk.get("dicmd")
+print(disk, messages)
 st.title("Gemini")
 sideb = st.sidebar
 options = ["User", "AI"]
