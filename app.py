@@ -41,6 +41,7 @@ def save_data(data):
 
 # Example usage
 disk = load_data()
+print(disk)
 messages = disk.get("messages", [])
 dicmd = disk.get("dicmd", {})
 
