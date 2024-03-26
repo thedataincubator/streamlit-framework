@@ -79,7 +79,7 @@ def ai_chat(data):
 def ai(data, ki):
     try:
         response =chat.send_message(data)
-        r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text), ki)
+        r = greenAPI.sending.sendMessage("120363244769769527@g.us", (response.text), ki)
         messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
         disk["messages"] = messages
         save_data(data=disk)
@@ -92,13 +92,13 @@ def ai(data, ki):
                 category = match.group("category")
                 probability = match.group("probability")
                 j=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
-                r = greenAPI.sending.sendMessage("120363274925681458@g.us", j, ki)
+                r = greenAPI.sending.sendMessage("120363244769769527@g.us", j, ki)
                 messages.append({"role": "assistant", "content":j, "id":r.data['idMessage']})
                 disk["messages"] = messages
                 save_data(data=disk)
 
 def sendo(message):
-    r = greenAPI.sending.sendMessage("120363274925681458@g.us", message)
+    r = greenAPI.sending.sendMessage("120363244769769527@g.us", message)
     print('send successfully')
     messages.append({"role": "assistant", "content":message, "id":r.data['idMessage']})
     disk["messages"] = messages
@@ -106,7 +106,7 @@ def sendo(message):
 
 def delid(id):
     try:
-        response = greenAPI.serviceMethods.deleteMessage(chatId="120363274925681458@g.us", idMessage=id)
+        response = greenAPI.serviceMethods.deleteMessage(chatId="120363244769769527@g.us", idMessage=id)
         response.data = json.loads(response.text)
     except Exception as e:
         print("deleted successfully")
@@ -143,15 +143,15 @@ def handler(type_webhook: str, body: dict) -> None:
         incoming_message_received(body)
 
 def incoming_message_received(body: dict) -> None:
-    if body['senderData']['chatId']=='120363274925681458@g.us':
+    if body['senderData']['chatId']=='120363244769769527@g.us':
       if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage']=='Gemini, Who is Aditya?':
-          r = greenAPI.sending.sendMessage("120363274925681458@g.us", "🦁 doubt?")
+          r = greenAPI.sending.sendMessage("120363244769769527@g.us", "🦁 doubt?")
           print('send successfully')
           messages.append({"role": "assistant", "content":'🦁 doubt?', "id":r.data['idMessage']})
           disk["messages"] = messages
           save_data(data=disk)
       if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage']=='Gemini, Nishkarsh is a type of guy who..':
-          r = greenAPI.sending.sendMessage("120363274925681458@g.us", "who can teach the fish 🐟 how to swim..")
+          r = greenAPI.sending.sendMessage("120363244769769527@g.us", "who can teach the fish 🐟 how to swim..")
           print('send successfully')
           messages.append({"role": "assistant", "content":'who can teach the fish 🐟 how to swim..', "id":r.data['idMessage']})
           disk["messages"] = messages
