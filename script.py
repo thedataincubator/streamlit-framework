@@ -58,29 +58,33 @@ def ai_chat(data):
     messages.append({"role": "user", "content":data})
     disk["messages"] = messages
     save_data(data=disk)
-    response =chat.send_message(data)
-    k=str(response.prompt_feedback)
-    if k.startswith('block_reason'):
-        pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
-        match = re.search(pattern, k)
-        if match:
-            category = match.group("category")
-            probability = match.group("probability")
-            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
+    try:
+        response =chat.send_message(data)
+    except:
+        k=str(response.prompt_feedback)
+        if k.startswith('block_reason'):
+            pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
+            match = re.search(pattern, k)
+            if match:
+                category = match.group("category")
+                probability = match.group("probability")
+                response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
     messages.append({"role": "assistant", "content":(response.text), "id":None})
     disk["messages"] = messages
     save_data(data=disk)
 
 def ai(data):
-    response =chat.send_message(data)
-    k=str(response.prompt_feedback)
-    if k.startswith('block_reason'):
-        pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
-        match = re.search(pattern, k)
-        if match:
-            category = match.group("category")
-            probability = match.group("probability")
-            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
+    try:
+        response =chat.send_message(data)
+    except:
+        k=str(response.prompt_feedback)
+        if k.startswith('block_reason'):
+            pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
+            match = re.search(pattern, k)
+            if match:
+                category = match.group("category")
+                probability = match.group("probability")
+                response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
     r = greenAPI.sending.sendMessage("120363274925681458@g.us", (response.text))
     messages.append({"role": "assistant", "content":(response.text), "id":r.data['idMessage']})
     disk["messages"] = messages
