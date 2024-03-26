@@ -156,7 +156,7 @@ def incoming_message_received(body: dict) -> None:
           messages.append({"role": "assistant", "content":'who can teach the fish 🐟 how to swim..', "id":r.data['idMessage']})
           disk["messages"] = messages
           save_data(data=disk)
-      if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage'].startswith('Gemini,'):
+      if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage'].startswith('Gemini,') and body['messageData']['textMessageData']['textMessage']!='Gemini, Who is Aditya?' and body['messageData']['textMessageData']['textMessage']!='Gemini, Nishkarsh is a type of guy who..':
         message=f"Recieved new message from {body['senderData']['senderContactName']}:={body['messageData']['textMessageData']['textMessage']}"
         messages.append({"role": "user", "content":message})
         disk["messages"] = messages
@@ -165,7 +165,7 @@ def incoming_message_received(body: dict) -> None:
         ai(data=message, ki=ki)
         print(message)
       if body['messageData']['typeMessage']=='quotedMessage' and body['messageData']['quotedMessage']['typeMessage']=='textMessage':
-        if body['messageData']['extendedTextMessageData']['text'] and body['messageData']['extendedTextMessageData']['text'].startswith('Gemini,'):
+        if body['messageData']['extendedTextMessageData']['text'] and body['messageData']['extendedTextMessageData']['text'].startswith('Gemini,') and body['messageData']['extendedTextMessageData']['text']!='Gemini, Who is Aditya?' and body['messageData']['extendedTextMessageData']['text']!='Gemini, Nishkarsh is a type of guy who..':
             message=f"Recieved new message from {body['senderData']['senderContactName']} with a quoted message(replying a message). message:={body['messageData']['extendedTextMessageData']['text']} _-_ reply:={body['messageData']['quotedMessage']['textMessage']}"
             messages.append({"role": "user", "content":message})
             disk["messages"] = messages
