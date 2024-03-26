@@ -124,7 +124,7 @@ def periodic_task():
 
 def main():
     threading.Thread(target=periodic_task, daemon=True).start()
-    ai(data="Hi Gemini, this is Sujal. I've successfully integrated your API with the WhatsApp API, which means you're now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we're all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let's have some great conversations!. Now on you will receive notification if someone message you"
+    ai(data="Hi Gemini, this is Sujal. I've successfully integrated your API with the WhatsApp API, which means you're now part of a WhatsApp group where you can chat and interact with people. Your role is to engage in conversations as if we're all chatting together in a friendly, casual manner. Remember to keep your responses relevant, respectful, and helpful, just like you would in a normal chat with friends. Let's have some great conversations!. Now on you will receive notification if someone message you")
     greenAPI.webhooks.startReceivingNotifications(handler)
 
 def handler(type_webhook: str, body: dict) -> None:
