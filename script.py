@@ -9,7 +9,7 @@ import threading
 import time
 from botocore.exceptions import ClientError
 
-# Fetch AWS credentials from environment variables
+
 aws_access_key_id = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
 bucket_name = os.environ.get('BUCKETEER_BUCKET_NAME')
