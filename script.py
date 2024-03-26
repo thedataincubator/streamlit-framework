@@ -44,7 +44,7 @@ messages = disk.get("messages")
 dicmd = disk.get("dicmd")
 
 greenAPI = API.GreenAPI(
-    "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
+    "7103920781", "8031be4c189f4873a4ee42e623fcc0bf76be368a89b6446fb9"
 )
 
 GOOGLE_API_KEY=os.environ['GOOGLE_API_KEY']
