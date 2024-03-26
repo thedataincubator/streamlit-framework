@@ -72,6 +72,7 @@ def ai(data):
 
 def sendo(message):
     r = greenAPI.sending.sendMessage("919549047575@c.us", message)
+    print('send successfully')
     messages.append({"role": "assistant", "content":message, "id":r.data['idMessage']})
     disk["messages"] = messages
     save_data(data=disk)
@@ -84,6 +85,8 @@ def delid(id):
         print("deleted successfully")
 
 def checkforthing():
+    disk = load_data()
+    dicmd = disk.get("dicmd")
     if dicmd!={}:
         for k in dicmd.keys():
             if k[0:6]=='delete':
@@ -98,7 +101,6 @@ def checkforthing():
 
 def periodic_task():
     while True:
-        print('checking')
         checkforthing()
         time.sleep(5)
 
