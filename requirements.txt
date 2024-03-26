@@ -9,3 +9,4 @@ google-generativeai
 whatsapp-api-client-python
 psycopg2
 sqlalchemy
+boto3
