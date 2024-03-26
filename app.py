@@ -61,7 +61,9 @@ for message in messages:
 if prompt := st.chat_input("What is up?"):
     if selected_option == "User":
         dicmd[f'userprompt-{uuid.uuid4()}'] = prompt
-    elif selected_option == "AI":
+        disk['dicmd']=dicmd
+        save_data(data=disk)
+    if selected_option == "AI":
         dicmd[f'aiprompt-{uuid.uuid4()}'] = prompt
-    disk['dicmd']=dicmd
-    save_data(data=disk)  # Save changes to JSON file
+        disk['dicmd']=dicmd
+        save_data(data=disk)  # Save changes to JSON file
