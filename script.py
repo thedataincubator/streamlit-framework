@@ -4,25 +4,46 @@ import re
 import json
 import os
 import google.generativeai as genai
-json_file_path = '/tmp/variables.json'
+import json
+import os
+import boto3
+import json
+import os
+from botocore.exceptions import ClientError
 
-# Function to load data from JSON file
+# Fetch AWS credentials from environment variables
+aws_access_key_id = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
+bucket_name = os.environ.get('BUCKETEER_BUCKET_NAME')
+s3_file_key = 'variables.json'
+
+session = boto3.Session(
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+)
+
+# Create an S3 client using the session
+s3 = session.client('s3')
+
 def load_data():
-    if os.path.exists(json_file_path):
-        with open(json_file_path, 'r') as file:
-            return json.load(file)
-    else:
-        return {"messages": [], "dicmd": {}}
+    try:
+        response = s3.get_object(Bucket=bucket_name, Key=s3_file_key)
+        data = response['Body'].read()
+        return json.loads(data)
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchKey':
+            return {"messages": [], "dicmd": {}}
+        else:
+            # Other errors: raise them
+            raise
 
-# Function to save data to JSON file
 def save_data(data):
-    with open(json_file_path, 'w') as file:
-        json.dump(data, file)
+    s3.put_object(Bucket=bucket_name, Key=s3_file_key, Body=json.dumps(data))
 
-# Load existing data
+# Example usage
 disk = load_data()
-messages = disk.get("messages", [])
-dicmd = disk.get("dicmd", {})
+messages = disk.get("messages")
+dicmd = disk.get("dicmd")
 
 greenAPI = API.GreenAPI(
     "7103919868", "7f12e02c4c9b4b56b16a50efdb3d417cb4453b69d5314553ad"
@@ -43,7 +64,7 @@ def ai(data):
     r = greenAPI.sending.sendMessage("919549047575@c.us", (response.text))
     messages.append({"role": "assistant", "content":(response.text)})
     disk["messages"] = messages
-    save_data(disk)
+    save_data(data=disk)
 
 def main():
   greenAPI.webhooks.startReceivingNotifications(handler)
@@ -59,7 +80,7 @@ def incoming_message_received(body: dict) -> None:
     message=(x.group().split(':')[1][2:(len(x.group().split(':')[1])-1)])
     messages.append({"role": "user", "content":message})
     disk["messages"] = messages
-    save_data(disk)
+    save_data(data=disk)
     ai(data=message)
     print(message)
 
