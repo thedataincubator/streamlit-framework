@@ -66,7 +66,7 @@ def ai_chat(data):
         if match:
             category = match.group("category")
             probability = match.group("probability")
-            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}')
+            response.text=f'Your prompt was declined due to safety, High risk category:{category} and Probability:{probability}'
     messages.append({"role": "assistant", "content":(response.text), "id":None})
     disk["messages"] = messages
     save_data(data=disk)
