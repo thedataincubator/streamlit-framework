@@ -2,28 +2,47 @@ import streamlit as st
 import uuid
 import json
 import os
+import boto3
+import json
+import os
+from botocore.exceptions import ClientError
 
-# Path to the JSON file
-json_file_path = '/tmp/variables.json'
+# Fetch AWS credentials from environment variables
+aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-# Function to load data from JSON file
+# Initialize a boto3 client with the credentials from environment variables
+s3 = boto3.client(
+    's3',
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key
+)
+
+bucket_name = os.environ.get('S3_BUCKET_NAME')
+s3_file_key = 'variables.json'
+
 def load_data():
-    if os.path.exists(json_file_path):
-        with open(json_file_path, 'r') as file:
-            return json.load(file)
-    else:
-        st.error('tmp not there')
-        return {"messages": [], "dicmd": {}}
+    """Load data from an S3 bucket."""
+    try:
+        response = s3.get_object(Bucket=bucket_name, Key=s3_file_key)
+        data = response['Body'].read()
+        return json.loads(data)
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'NoSuchKey':
+            st.error('file not found')
+            return {"messages": [], "dicmd": {}}
+        else:
+            # Other errors: raise them
+            raise
 
-# Function to save data to JSON file
 def save_data(data):
-    with open(json_file_path, 'w') as file:
-        json.dump(data, file)
+    """Save data to an S3 bucket."""
+    s3.put_object(Bucket=bucket_name, Key=s3_file_key, Body=json.dumps(data))
 
-# Load existing data
-data = load_data()
-messages = data.get("messages", [])
-dicmd = data.get("dicmd", {})
+# Example usage
+disk = load_data()
+messages = disk.get("messages", [])
+dicmd = disk.get("dicmd", {})
 
 st.title("Gemini")
 sideb = st.sidebar
