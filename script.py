@@ -65,7 +65,6 @@ def ai_chat(data):
         disk["messages"] = messages
         save_data(data=disk)
     except:
-        response =chat.send_message(data)
         k=str(response.prompt_feedback)
         if k.startswith('block_reason'):
             pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
@@ -91,7 +90,6 @@ def ai(data):
         disk["messages"] = messages
         save_data(data=disk)
     except:
-        response =chat.send_message(data)
         k=str(response.prompt_feedback)
         if k.startswith('block_reason'):
             pattern = r"block_reason: SAFETY\s+safety_ratings {\s+category: (?P<category>\w+)\s+probability: (?P<probability>\w+)\s+"
