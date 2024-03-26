@@ -134,7 +134,7 @@ def handler(type_webhook: str, body: dict) -> None:
 def incoming_message_received(body: dict) -> None:
     if body['senderData']['chatId']=='120363274925681458@g.us':
       if body['messageData']['typeMessage']=='textMessage' and body['messageData']['textMessageData']['textMessage'].startswith('Gemini,'):
-        message=f"Recieved new message from {body['senderData']['senderContactName']}:={body['messageData']['textMessageData']['textMessage']}")
+        message=f"Recieved new message from {body['senderData']['senderContactName']}:={body['messageData']['textMessageData']['textMessage']}"
         messages.append({"role": "user", "content":message})
         disk["messages"] = messages
         save_data(data=disk)
@@ -142,7 +142,7 @@ def incoming_message_received(body: dict) -> None:
         print(message)
       if body['messageData']['typeMessage']=='quotedMessage' and body['messageData']['quotedMessage']['typeMessage']=='textMessage':
         if body['messageData']['extendedTextMessageData']['text'] and body['messageData']['extendedTextMessageData']['text'].startswith('Gemini,'):
-            message=f"Recieved new message from {body['senderData']['senderContactName']} with a quoted message(replying a message). message:={body['messageData']['extendedTextMessageData']['text']} _-_ reply:={body['messageData']['quotedMessage']['textMessage']}")
+            message=f"Recieved new message from {body['senderData']['senderContactName']} with a quoted message(replying a message). message:={body['messageData']['extendedTextMessageData']['text']} _-_ reply:={body['messageData']['quotedMessage']['textMessage']}"
             messages.append({"role": "user", "content":message})
             disk["messages"] = messages
             save_data(data=disk)
