@@ -12,6 +12,7 @@ def load_data():
         with open(json_file_path, 'r') as file:
             return json.load(file)
     else:
+        st.error('tmp not there')
         return {"messages": [], "dicmd": {}}
 
 # Function to save data to JSON file
